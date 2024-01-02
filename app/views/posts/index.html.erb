@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: black;
+      padding: 10px 20px;
+      margin-bottom: 50px;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+    }
+
+    .brand {
+      text-decoration: none;
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-list li {
+      margin-right: 20px;
+    }
+
+    .nav-list a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      transition: color 0.3s ease-in-out;
+    }
+
+    .nav-list a:hover {
+      color: #ffc107;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    .btn {
+      padding: 8px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: #ffc107;
+      color: #fff;
+    }
+
+    .post {
+      margin-bottom: 20px;
+      padding: 20px;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    footer {
+      color: white;
+      padding: 10px;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #343a40;
+    }
+    .btn-success {
+  background-color: #28a745; /* Green color */
+  color: #fff; /* Text color */
+}
+   
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <a href="#" class="brand">Facebook</a>
+      <ul class="nav-list">
+        <li><%= link_to 'Sign in', new_user_session_path %></li>
+        <li><%= link_to 'Sign out', destroy_user_session_path, data: { turbo_method: :delete } %></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>Posts</h1>
+    <% if user_signed_in? %>
+  <!-- Content to display when the user is signed in -->
+  <p>Welcome, <%= current_user.user_name %>!</p>
+  <% end %>
+ 
+
+    <%= link_to 'Create New Post', new_post_path, class: 'btn btn-primary btn-success' %>
+
+
+    <% if user_signed_in? %>
+      <% @posts.each do |post| %>
+        <div class="post">
+          <p><b>Created By: </b><%= post.user.user_name %></p>
+          <p><b>Content: </b><%= post.content %></p>
+          <p><strong>No of Likes: </strong> <%= post.likes.count %></p>
+          <%= link_to 'View Post', post_path(post), class: 'btn btn-primary' %>
+          <%= link_to 'Like', post_likes_path(post), method: :post, class: 'btn btn-like', remote: true %>
+        </div>
+      <% end %>
+    <% else %>
+      <h1>Please sign in to view posts</h1>
+    <% end %>
+  </div>
+
+
+</body>
+</html>
