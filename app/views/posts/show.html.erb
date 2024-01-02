@@ -95,7 +95,7 @@
     form {
       margin-top: 20px;
       display: flex;
-      flex-direction: column; /* Adjusted flex direction for better stacking */
+      flex-direction: column;
     }
 
     label {
@@ -104,7 +104,7 @@
     }
 
     textarea {
-      width: 100%; /* Adjusted textarea width to full */
+      width: 100%;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 5px;
@@ -114,6 +114,32 @@
     .buttons {
       display: flex;
       justify-content: space-between;
+    }
+
+    /* New styles for comments */
+    .comment {
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .comment-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-like {
+      margin-left: 10px;
     }
   </style>
 </head>
@@ -135,18 +161,21 @@
       <p><strong>Created by:</strong> <%= @post.user.email %></p>
       <p><strong>Content:</strong> <%= @post.content %></p>
       <p><strong>No of Comments:</strong> <%= @post.comments.count %></p>
-     
     </div>
 
     <h2>Comments</h2>
-    <ul>
-      <% @comments.each do |comment| %>
-        <li><strong><%= comment.user.user_name %>:</strong> <%= comment.content %></li>
-        <%= link_to 'Like', comment_likes_path(comment), method: :post, class: 'btn btn-like', remote: true %>
-        <p><strong>No of Likes:</strong> <%= comment.likes.count %></p>
-      <% end %>
-    </ul>
-
+    <% @comments.each do |comment| %>
+      <div class="comment">
+        <div class="comment-header">
+          <strong><%= comment.user.user_name %></strong>
+          <div class="comment-actions">
+            <%= link_to 'Like', comment_likes_path(comment), method: :post, class: 'btn btn-like', remote: true %>
+            <p><strong>No of Likes:</strong> <%= comment.likes.count %></p>
+          </div>
+        </div>
+        <p><%= comment.content %></p>
+      </div>
+    <% end %>
 
     <!-- Form to create a new comment -->
     <%= form_with(model: [@post, Comment.new], local: true) do |form| %>
@@ -163,5 +192,7 @@
   </div>
 </body>
 </html>
+
+
 
 

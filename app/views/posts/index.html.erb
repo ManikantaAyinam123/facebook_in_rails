@@ -125,6 +125,9 @@
           <p><strong>No of Likes: </strong> <%= post.likes.count %></p>
           <%= link_to 'View Post', post_path(post), class: 'btn btn-primary' %>
           <%= link_to 'Like', post_likes_path(post), method: :post, class: 'btn btn-like', remote: true %>
+          <% if post.user == current_user %>
+                <%= link_to "Delete ", post_path(post), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"},class: 'view-post-link' %>
+            <% end %>
         </div>
       <% end %>
     <% else %>
