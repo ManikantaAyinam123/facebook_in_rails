@@ -16,7 +16,7 @@ class PostsController < ApplicationController
     @post = current_user.post.build(post_params)
 
     if @post.save
-         redirect_to pages_index_path, notice: 'Post was successfully created.'
+         redirect_to posts_path, notice: 'Post was successfully created.'
     else
       render :new
     end

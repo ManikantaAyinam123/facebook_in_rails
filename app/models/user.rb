@@ -7,6 +7,8 @@ class User < ApplicationRecord
          has_many :post
          has_many :comment
          validates :user_name, presence: true, uniqueness: true
-         
+         validates :Phone_number, presence: true, length: { minimum: 10, maximum: 15 }
+          validates :gender, inclusion: { in: %w(male female other), message: "must be male, female, or other" }
+          
 
 end

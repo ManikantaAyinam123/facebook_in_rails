@@ -1,30 +1,34 @@
 class LikesController < ApplicationController
   def index
     # Your code for the 'index' action goes here
-   create
-  
-    end
+    create
+  end
+
   def create
     if params[:post_id]
-      like_post
+      toggle_like(Post.find(params[:post_id]))
     elsif params[:comment_id]
-      like_comment
+      toggle_like(Comment.find(params[:comment_id]))
     else
       redirect_back(fallback_location: root_path, alert: 'Invalid like request.')
     end
   end
 
-  def like_post
-    @post = Post.find(params[:post_id])
-    @like = @post.likes.create(user: current_user)
-    redirect_back(fallback_location: root_path)
-  end
+  private
 
-  def like_comment
-    @comment = Comment.find(params[:comment_id])
-    @like = @comment.likes.create(user: current_user)
+  def toggle_like(item)
+    existing_like = item.likes.find_by(user: current_user)
+
+    if existing_like
+      existing_like.destroy
+    else
+      item.likes.create(user: current_user)
+    end
+
     redirect_back(fallback_location: root_path)
   end
 end
+
+
 
   

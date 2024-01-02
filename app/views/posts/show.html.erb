@@ -1,4 +1,4 @@
-<!-- app/views/comments/show.html.erb -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,6 +124,7 @@
       margin-bottom: 15px;
       background-color: #f8f9fa;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: relative; /* Added position relative for comment container */
     }
 
     .comment-header {
@@ -136,10 +137,39 @@
     .comment-actions {
       display: flex;
       align-items: center;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      margin-bottom: 5px;
     }
 
-    .btn-like {
-      margin-left: 10px;
+    .btn-like, .btn-unlike {
+      padding: 8px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+      border: 1px solid #3498db; /* Default border color for both like and unlike */
+    }
+
+    .btn-like:hover {
+      background-color: #2980b9;
+    }
+
+    .btn-unlike:hover {
+      background-color: #c0392b;
+    }
+
+    /* Style for liked state */
+    .btn-like.liked {
+      background-color: #2980b9;
+      color: #fff;
+    }
+
+    /* Style for unliked state */
+    .btn-unlike.unliked {
+      background-color: #c0392b;
+      color: #fff;
     }
   </style>
 </head>
@@ -148,7 +178,7 @@
     <nav class="navbar">
       <a href="#" class="brand">Facebook</a>
       <ul class="nav-list">
-        <li><%= link_to 'Sign in', new_user_session_path %></li>
+       
         <li><%= link_to 'Sign out', destroy_user_session_path, data: { turbo_method: :delete } %></li>
       </ul>
     </nav>
@@ -158,7 +188,7 @@
     <h1>Post Details</h1>
 
     <div class="post">
-      <p><strong>Created by:</strong> <%= @post.user.email %></p>
+      <p><strong>Created by:</strong> <%= @post.user.user_name %></p>
       <p><strong>Content:</strong> <%= @post.content %></p>
       <p><strong>No of Comments:</strong> <%= @post.comments.count %></p>
     </div>
@@ -169,11 +199,16 @@
         <div class="comment-header">
           <strong><%= comment.user.user_name %></strong>
           <div class="comment-actions">
-            <%= link_to 'Like', comment_likes_path(comment), method: :post, class: 'btn btn-like', remote: true %>
-            <p><strong>No of Likes:</strong> <%= comment.likes.count %></p>
+            <% if comment.likes.exists?(user: current_user) %>
+              <%= link_to 'Unlike', comment_likes_path(comment), method: :post, class: 'btn btn-like liked' %>
+            <% else %>
+              <%= link_to 'Like', comment_likes_path(comment), method: :post, class: 'btn btn-unlike unliked' %>
+            <% end %>
+            
           </div>
         </div>
-        <p><%= comment.content %></p>
+        <p><strong>Content:</strong><%= comment.content %></p>
+        <p><strong> No of Likes:</strong> <%= comment.likes.count %></p>
       </div>
     <% end %>
 

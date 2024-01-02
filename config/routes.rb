@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     resources :likes
   end
 
-  get 'pages/index'
+  get 'posts/index'
 
 end
 
